@@ -109,7 +109,6 @@ public class LogStat extends Configured implements Tool {
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TableOutputFormat.class);
         FileInputFormat.addInputPath(job, in);
-        //TableMapReduceUtil.initTableReducerJob("log",Reduce.class,job);
         return job.waitForCompletion(true) ? 0 : 1;
     }
 

@@ -15,7 +15,7 @@
         <module>../log-common</module>
         <module>../log-persistent</module>
         <module>../log-analysis</module>
-        <module>../log-web</module>
+        <module>../log-admin</module>
     </modules>
 
     <properties>
