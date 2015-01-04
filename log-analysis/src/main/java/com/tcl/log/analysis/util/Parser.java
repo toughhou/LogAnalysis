@@ -1,7 +1,7 @@
 package com.tcl.log.analysis.util;
 
-import com.tcl.log.analysis.model.Pv;
 import com.tcl.log.common.util.CommonUtil;
+import com.tcl.log.persistent.model.Pv;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -50,15 +50,28 @@ public class Parser {
         return pvList;
     }
 
-    public static Pv parserPv(String key,String value){
+    public static Pv parserPv(String key, String value) {
         String[] keyFields = key.split("#");
-        String[] valueFields=value.split("#");
-        Pv pv=new Pv();
+        String[] valueFields = value.split("#");
+        Pv pv = new Pv();
         pv.setPvKey(keyFields[0]);
         pv.setRequestUrl(keyFields[1]);
-        pv.setTotalNum(CommonUtil.objtoInt(valueFields[0]));
-        pv.setSuccessNum(CommonUtil.objtoInt(valueFields[1]));
-        pv.setIpNum(CommonUtil.objtoInt(valueFields[2]));
+        pv.setMaxRequestTime(CommonUtil.strTodouble(valueFields[0]));
+        pv.setAvgRequestTime(CommonUtil.strTodouble(valueFields[1]));
+        pv.setTotalNum(CommonUtil.objtoInt(valueFields[2]));
+        pv.setSuccessNum(CommonUtil.objtoInt(valueFields[3]));
+        pv.setIpNum(CommonUtil.objtoInt(valueFields[4]));
         return pv;
+    }
+
+    /**
+     * 获取文件tag
+     *
+     * @param fileName
+     * @return
+     */
+    public static String getFileTag(String fileName) {
+        String[] tags = fileName.split("_");
+        return tags[0];
     }
 }

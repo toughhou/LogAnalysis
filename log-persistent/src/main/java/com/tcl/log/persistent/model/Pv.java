@@ -1,4 +1,4 @@
-package com.tcl.log.analysis.model;
+package com.tcl.log.persistent.model;
 
 /**
  * @author kelong
@@ -10,6 +10,8 @@ public class Pv {
     private long totalNum;
     private long successNum;
     private long ipNum;
+    private double maxRequestTime;
+    private double avgRequestTime;
 
     public String getPvKey() {
         return pvKey;
@@ -49,5 +51,21 @@ public class Pv {
 
     public void setIpNum(long ipNum) {
         this.ipNum = ipNum;
+    }
+
+    public double getMaxRequestTime() {
+        return maxRequestTime;
+    }
+
+    public void setMaxRequestTime(double maxRequestTime) {
+        this.maxRequestTime = maxRequestTime;
+    }
+
+    public double getAvgRequestTime() {
+        return avgRequestTime;
+    }
+
+    public void setAvgRequestTime(double avgRequestTime) {
+        this.avgRequestTime = avgRequestTime;
     }
 }

@@ -1,7 +1,7 @@
-package com.tcl.log.analysis;
+package com.tcl.log.persistent;
 
-import com.tcl.log.analysis.hbase.dao.HbaseBaseDao;
 import com.tcl.log.common.util.JsonParser;
+import com.tcl.log.persistent.habse.dao.HbaseBaseDao;
 import com.tcl.log.persistent.model.Pv;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Result;

@@ -13,4 +13,13 @@ public class CommonUtil {
         }
         return result;
     }
+
+    public static double strTodouble(String str) {
+        double result = 0;
+        try {
+            result = Double.parseDouble(str);
+        } catch (NumberFormatException e) {
+        }
+        return result;
+    }
 }

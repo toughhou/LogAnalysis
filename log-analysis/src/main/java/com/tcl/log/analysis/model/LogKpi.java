@@ -1,6 +1,7 @@
 package com.tcl.log.analysis.model;
 
 import com.tcl.log.common.util.StringUtil;
+import org.apache.log4j.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,20 +13,24 @@ import java.util.Locale;
  * @date 12/26/14
  */
 public class LogKpi {
+    static Logger LOG= Logger.getLogger(LogKpi.class);
+
     private String remote_addr;// 记录客户端的ip地址
     private String remote_user;// 记录客户端用户名称,忽略属性"-"
     private String time_local;// 记录访问时间与时区
     private String request;// 记录请求的url与http协议
     private String status;// 记录请求状态；成功是200
     private String body_bytes_sent;// 记录发送给客户端文件主体内容大小
+    private String requestTime;//请求时间
     private String http_referer;// 用来记录从那个页面链接访问过来的
+    private String http_forward;//
     private String http_user_agent;// 记录客户浏览器的相关信息
 
     private boolean valid = true;// 判断数据是否合法
     private boolean http_success = true;//判断请求是否成功
+    private String request_method;
 
     private static LogKpi parser(String line) {
-//        System.out.println(line);
         LogKpi kpi = new LogKpi();
         String[] arr = line.split(" ");
         if (arr.length > 11) {
@@ -35,11 +40,13 @@ public class LogKpi {
             kpi.setRequest(arr[6]);
             kpi.setStatus(arr[8]);
             kpi.setBody_bytes_sent(arr[9]);
-            kpi.setHttp_referer(arr[10]);
-            if (arr.length > 12) {
-                kpi.setHttp_user_agent(arr[11] + " " + arr[12]);
+            kpi.setRequestTime(arr[10]);
+            kpi.setHttp_forward(arr[11]);
+            kpi.setHttp_referer(arr[12]);
+            if (arr.length > 14) {
+                kpi.setHttp_user_agent(arr[13] + " " + arr[14]);
             } else {
-                kpi.setHttp_user_agent(arr[11]);
+                kpi.setHttp_user_agent(arr[13]);
             }
             if (Integer.parseInt(kpi.getStatus()) >= 400) {// 大于400，HTTP错误
                 kpi.setHttp_success(false);
@@ -58,6 +65,7 @@ public class LogKpi {
         try {
             kpi = parser(line);
         } catch (Exception e) {
+//            LOG.error(e.getMessage()+"#####"+line,e);
         }
         return kpi;
     }
@@ -72,6 +80,8 @@ public class LogKpi {
         sb.append("\nrequest:" + this.request);
         sb.append("\nstatus:" + this.status);
         sb.append("\nbody_bytes_sent:" + this.body_bytes_sent);
+        sb.append("\nrequest_time:" + this.requestTime);
+        sb.append("\nhttp_forward:"+this.http_forward);
         sb.append("\nhttp_referer:" + this.http_referer);
         sb.append("\nhttp_user_agent:" + this.http_user_agent);
         return sb.toString();
@@ -180,10 +190,36 @@ public class LogKpi {
         this.http_success = http_success;
     }
 
+    public String getRequestTime() {
+        return requestTime;
+    }
+
+    public void setRequestTime(String requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    public String getHttp_forward() {
+        return http_forward;
+    }
+
+    public void setHttp_forward(String http_forward) {
+        this.http_forward = http_forward;
+    }
+
+    public String getRequest_method() {
+        return request_method;
+    }
+
+    public void setRequest_method(String request_method) {
+        this.request_method = request_method;
+    }
+
     public static void main(String args[]) {
 //        String line = "222.68.172.190 - - [18/Sep/2013:06:49:57 +0000] \"GET /images/my.jpg HTTP/1.1\" 200 19939 \"http://www.angularjs.cn/A00n\" \"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.66 Safari/537.36\"";
         String line = "154.0.180.89 - - [24/Dec/2014:08:19:45 +0000] \"POST /phone/unregister HTTP/1.1\" 200 28 \"-\" \"-\"";
-        LogKpi logKpi=LogKpi.filterPVs(line);
+        String line2="189.241.201.152 - - [04/Jan/2015:07:13:17 +0000] \"POST /phone/unregister HTTP/1.1\" 200 28 0.706 \"-\" \"-\" \"-\"\n";
+        String line3="113.175.190.13 - - [04/Jan/2015:07:53:00 +0000] \"-\" 400 0 59.994 \"-\" \"-\" \"-\"";
+        LogKpi logKpi=LogKpi.filterPVs(line3);
         System.out.println(logKpi.toString());
         System.out.println(StringUtil.append("a","b"));
     }

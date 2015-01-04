@@ -9,10 +9,12 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
@@ -37,6 +39,9 @@ public class LogPv extends Configured implements Tool {
         //实现map函数
         public void map(Object key, Text value, Context context)
                 throws IOException, InterruptedException {
+            //获取文件名
+            InputSplit inputSplit = context.getInputSplit();
+            String fileName = ((FileSplit) inputSplit).getPath().getName();
             LogKpi kpi = LogKpi.filterPVs(value.toString());
             if(kpi.isValid()){
                 String hour = kpi.getTime_local_Date_hour();
