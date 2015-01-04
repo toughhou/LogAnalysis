@@ -74,7 +74,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>aota-admin</finalName>
+        <finalName>log-admin</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>

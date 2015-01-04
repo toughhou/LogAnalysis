@@ -9,5 +9,5 @@ import java.util.List;
  * @date 1/4/15
  */
 public interface LogManage {
-    List<Pv> selectPvByRow(String appName,String hour);
+    List<Pv> selectPvByRow(String rowKey);
 }

@@ -1,6 +1,7 @@
 package com.tcl.log.manage.impl;
 
 import com.tcl.log.manage.LogManage;
+import com.tcl.log.persistent.dao.LogDao;
 import com.tcl.log.persistent.habse.dao.HbaseBaseDao;
 import com.tcl.log.persistent.model.Pv;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,10 @@ import java.util.List;
 @Service("logManage")
 public class LogManageImpl implements LogManage {
     @Resource
-    private HbaseBaseDao hbaseBaseDao;
+    private LogDao logDao;
 
     @Override
-    public List<Pv> selectPvByRow(String appName, String hour) {
-        return null;
+    public List<Pv> selectPvByRow(String rowKey) {
+        return logDao.selectPvByRow(rowKey);
     }
 }

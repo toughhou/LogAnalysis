@@ -12,7 +12,21 @@
     <artifactId>log-manage</artifactId>
     <packaging>jar</packaging>
     <name>log-manage</name>
-
+    <build>
+        <finalName>log-manage</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
     <dependencies>
         <dependency>
             <groupId>com.tcl.loganalysis</groupId>

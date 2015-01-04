@@ -11,15 +11,10 @@
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:viewClass="org.springframework.web.servlet.view.JstlView" 
-		p:prefix="/WEB-INF/jsp/"
+		p:prefix="/WEB-INF/appviews/"
 		p:suffix=".jsp" />
     <mvc:resources mapping="/**" location="/" order="1"/>
-	<mvc:resources location="/scripts/" mapping="/scripts/**"/>
-	<mvc:resources location="/images/" mapping="/images/**"/>
-	<mvc:resources location="/styles/" mapping="/styles/**"/>
-	<mvc:resources location="/views/" mapping="/views/**"/>
-	<mvc:resources location="/test/" mapping="/test/**"/>
-    <!--<mvc:annotation-driven />-->
+	<mvc:resources location="/resource/" mapping="/resource/**"/>
 
 
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
