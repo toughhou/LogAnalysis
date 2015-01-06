@@ -5,5 +5,4 @@ package com.tcl.log.analysis.service;
  * @date 12/30/14
  */
 public interface LogService {
-    public void insertLogToHbase(String dateStr);
 }

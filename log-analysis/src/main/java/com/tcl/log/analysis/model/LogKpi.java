@@ -1,5 +1,6 @@
 package com.tcl.log.analysis.model;
 
+import com.tcl.log.common.util.DateUtil;
 import com.tcl.log.common.util.StringUtil;
 import org.apache.log4j.Logger;
 
@@ -13,7 +14,7 @@ import java.util.Locale;
  * @date 12/26/14
  */
 public class LogKpi {
-    static Logger LOG= Logger.getLogger(LogKpi.class);
+    static Logger LOG = Logger.getLogger(LogKpi.class);
 
     private String remote_addr;// 记录客户端的ip地址
     private String remote_user;// 记录客户端用户名称,忽略属性"-"
@@ -65,7 +66,7 @@ public class LogKpi {
         try {
             kpi = parser(line);
         } catch (Exception e) {
-//            LOG.error(e.getMessage()+"#####"+line,e);
+            //            LOG.error(e.getMessage()+"#####"+line,e);
         }
         return kpi;
     }
@@ -81,7 +82,7 @@ public class LogKpi {
         sb.append("\nstatus:" + this.status);
         sb.append("\nbody_bytes_sent:" + this.body_bytes_sent);
         sb.append("\nrequest_time:" + this.requestTime);
-        sb.append("\nhttp_forward:"+this.http_forward);
+        sb.append("\nhttp_forward:" + this.http_forward);
         sb.append("\nhttp_referer:" + this.http_referer);
         sb.append("\nhttp_user_agent:" + this.http_user_agent);
         return sb.toString();
@@ -107,18 +108,16 @@ public class LogKpi {
         return time_local;
     }
 
-    public Date getTime_local_Date() throws ParseException {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss", Locale.US);
-        return df.parse(this.time_local);
+    public Date getTime_local_Date() {
+        return DateUtil.fomartStrToDate("dd/MMM/yyyy:HH:mm:ss", this.time_local);
+    }
+
+    public String getTime_local_Day() {
+        return DateUtil.fomartDateToStr("yyyyMMdd", this.getTime_local_Date());
     }
 
     public String getTime_local_Date_hour() {
-        try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHH");
-            return df.format(this.getTime_local_Date());
-        } catch (Exception e) {
-        }
-        return "";
+        return DateUtil.fomartDateToStr("yyyyMMddHH", this.getTime_local_Date());
     }
 
     public void setTime_local(String time_local) {
@@ -126,6 +125,14 @@ public class LogKpi {
     }
 
     public String getRequest() {
+        if (request != null) {
+            if (request.contains("?")) {
+                request = request.substring(0, request.indexOf("?"));
+            }
+            if (request.contains(";")) {
+                request = request.substring(0, request.indexOf(";"));
+            }
+        }
         return request;
     }
 
@@ -158,7 +165,8 @@ public class LogKpi {
             return http_referer;
         }
 
-        String str = this.http_referer.replace("\"", "").replace("http://", "").replace("https://", "");
+        String str =
+            this.http_referer.replace("\"", "").replace("http://", "").replace("https://", "");
         return str.indexOf("/") > 0 ? str.substring(0, str.indexOf("/")) : str;
     }
 
@@ -215,12 +223,15 @@ public class LogKpi {
     }
 
     public static void main(String args[]) {
-//        String line = "222.68.172.190 - - [18/Sep/2013:06:49:57 +0000] \"GET /images/my.jpg HTTP/1.1\" 200 19939 \"http://www.angularjs.cn/A00n\" \"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.66 Safari/537.36\"";
-        String line = "154.0.180.89 - - [24/Dec/2014:08:19:45 +0000] \"POST /phone/unregister HTTP/1.1\" 200 28 \"-\" \"-\"";
-        String line2="189.241.201.152 - - [04/Jan/2015:07:13:17 +0000] \"POST /phone/unregister HTTP/1.1\" 200 28 0.706 \"-\" \"-\" \"-\"\n";
-        String line3="113.175.190.13 - - [04/Jan/2015:07:53:00 +0000] \"-\" 400 0 59.994 \"-\" \"-\" \"-\"";
-        LogKpi logKpi=LogKpi.filterPVs(line3);
+        //        String line = "222.68.172.190 - - [18/Sep/2013:06:49:57 +0000] \"GET /images/my.jpg HTTP/1.1\" 200 19939 \"http://www.angularjs.cn/A00n\" \"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.66 Safari/537.36\"";
+        String line =
+            "154.0.180.89 - - [24/Dec/2014:08:19:45 +0000] \"POST /phone/unregister HTTP/1.1\" 200 28 \"-\" \"-\"";
+        String line2 =
+            "189.241.201.152 - - [04/Jan/2015:07:13:17 +0000] \"POST /phone/unregister HTTP/1.1\" 200 28 0.706 \"-\" \"-\" \"-\"\n";
+        String line3 =
+            "113.175.190.13 - - [04/Jan/2015:07:53:00 +0000] \"-\" 400 0 59.994 \"-\" \"-\" \"-\"";
+        LogKpi logKpi = LogKpi.filterPVs(line3);
         System.out.println(logKpi.toString());
-        System.out.println(StringUtil.append("a","b"));
+        System.out.println(StringUtil.append("a", "b"));
     }
 }

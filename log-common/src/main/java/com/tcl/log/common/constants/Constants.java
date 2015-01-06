@@ -5,12 +5,14 @@ package com.tcl.log.common.constants;
  * @date 12/26/14
  */
 public abstract class Constants {
-    public static class Analysis {
-        public static final String REQUEST_NULL = "NONE";
+    public static class ANALYSIS {
+        public static final int LOG_STAT_HOUR=1;
+        public static final int LOG_STAT_DAY=2;
     }
 
     public static class HBASE {
-        public static final String LOG_TABLE = "log";
+        public static final String LOG_TABLE_HOUR = "log";
+        public static final String LOG_TABLE_DAY="log_day";
         public static final String LOG_PV_CF = "pv";
         public static final String LOG_EXCEPTION_CF = "exception";
     }

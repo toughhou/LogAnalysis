@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by kelong on 9/2/14.
@@ -31,6 +32,24 @@ public class DateUtil {
             LOG.error(e.getMessage(), e);
         }
         return dateString;
+    }
+
+    /**
+     * 字符串格式转换为时间格式
+     *
+     * @param format
+     * @param date
+     * @return
+     */
+    public static Date fomartStrToDate(String format, String date) {
+        SimpleDateFormat df = new SimpleDateFormat(format, Locale.US);
+        Date d = null;
+        try {
+            d = df.parse(date);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return d;
     }
 
     /**

@@ -14,5 +14,5 @@ public interface LogDao {
      * @param rowKey
      * @return
      */
-    List<Pv> selectPvByRow(String rowKey);
+    List<Pv> selectPvByRow(String rowKey,int type);
 }

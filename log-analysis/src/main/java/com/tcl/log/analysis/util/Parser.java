@@ -1,6 +1,9 @@
 package com.tcl.log.analysis.util;
 
+import com.tcl.log.analysis.model.LogKpi;
+import com.tcl.log.common.constants.Constants;
 import com.tcl.log.common.util.CommonUtil;
+import com.tcl.log.common.util.StringUtil;
 import com.tcl.log.persistent.model.Pv;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -17,39 +20,45 @@ public class Parser {
     private static Logger LOG = Logger.getLogger(Parser.class);
 
     /**
-     * 解析pv对象
-     *
-     * @param fileContent
+     * @param fileTag
+     * @param lineValue
      * @return
      */
-    public static List<Pv> parserPv(String fileContent) {
-        if (StringUtils.isEmpty(fileContent)) {
-            LOG.warn("file content is empty." + new Date());
-            return null;
-        }
-        List<Pv> pvList = new ArrayList<Pv>();
-        try {
-            String[] rows = fileContent.split("\\n");
-            if (rows != null && rows.length > 0) {
-                for (String row : rows) {
-                    Pv pv = new Pv();
-                    String[] columns = row.split("\\t");
-                    String[] fields = columns[0].split("#");
-                    String[] kpiFields = columns[1].split("#");
-                    pv.setPvKey(fields[0]);
-                    pv.setRequestUrl(fields[1]);
-                    pv.setTotalNum(CommonUtil.objtoInt(kpiFields[0]));
-                    pv.setSuccessNum(CommonUtil.objtoInt(kpiFields[1]));
-                    pv.setIpNum(CommonUtil.objtoInt(kpiFields[2]));
-                    pvList.add(pv);
-                }
+    public static String[] parseing(String fileTag, String lineValue, int type) {
+        LogKpi kpi = LogKpi.filterPVs(lineValue);
+        String[] logArr = null;
+        if (kpi != null && kpi.isValid()) {
+            String timeKey=null;
+            switch (type) {
+                case Constants.ANALYSIS.LOG_STAT_HOUR:
+                    timeKey = kpi.getTime_local_Date_hour();
+                    break;
+                case Constants.ANALYSIS.LOG_STAT_DAY:
+                    timeKey = kpi.getTime_local_Day();
+                    break;
             }
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            String requestUrl = kpi.getRequest();
+            if (StringUtils.isEmpty(timeKey)||StringUtils.isEmpty(requestUrl)) {
+                return null;
+            }
+            String remote_Addr = kpi.getRemote_addr();
+            boolean http_success = kpi.isHttp_success();
+            String requestTime = kpi.getRequestTime();
+            int http_success_flag = (http_success == true ? 1 : 0);
+            String rowKey = StringUtil.append(fileTag, "_", timeKey, "#", requestUrl);
+            String rowValue =
+                StringUtil.append(requestTime, "#", remote_Addr, "#", http_success_flag);
+            logArr = new String[] {rowKey, rowValue};
         }
-        return pvList;
+        return logArr;
     }
 
+    /**
+     *
+     * @param key
+     * @param value
+     * @return
+     */
     public static Pv parserPv(String key, String value) {
         String[] keyFields = key.split("#");
         String[] valueFields = value.split("#");

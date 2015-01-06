@@ -3,6 +3,7 @@ package com.tcl.log.persistent;
 import com.tcl.log.common.util.JsonParser;
 import com.tcl.log.persistent.habse.dao.HbaseBaseDao;
 import com.tcl.log.persistent.model.Pv;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Result;
 import org.junit.Before;
@@ -25,7 +26,7 @@ public class HbaseBaseDaoTest {
 
     @Test
     public void creatTableTest() throws Exception {
-        hbaseBaseDao.creatTable("log", "pv", "exception");
+        hbaseBaseDao.creatTable("log_day", "pv", "exception");
         System.out.println("==========================");
     }
 
@@ -43,7 +44,11 @@ public class HbaseBaseDaoTest {
 
     @Test
     public void getOneRecordTest() throws Exception {
-        Result result = hbaseBaseDao.getOneRecord("log", "app1_2014121912");
+        Result result = hbaseBaseDao.getOneRecord("log", "findmeback_2015010407");
+        List<Cell> cells=result.getColumnCells("pv".getBytes(),"/phone/unregister".getBytes());
+        for(Cell cell:cells){
+            System.out.println(new String(cell.getValue()));
+        }
         for (KeyValue kv : result.raw()) {
             System.out.println(new String(kv.getKey()) + "=====>" + new String(kv.getValue()));
         }
