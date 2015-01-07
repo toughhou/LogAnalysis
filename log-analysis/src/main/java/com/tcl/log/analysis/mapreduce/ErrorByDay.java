@@ -1,10 +1,16 @@
 package com.tcl.log.analysis.mapreduce;
 
+import com.tcl.log.analysis.mapreduce.input.ErrorFileInputFormat;
+import com.tcl.log.analysis.model.LogError;
+import com.tcl.log.analysis.util.HbaseUtil;
 import com.tcl.log.analysis.util.Parser;
 import com.tcl.log.common.constants.Constants;
+import com.tcl.log.common.util.JsonParser;
+import com.tcl.log.common.util.StringUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableOutputFormat;
 import org.apache.hadoop.hbase.mapreduce.TableReducer;
@@ -37,16 +43,15 @@ public class ErrorByDay extends Configured implements Tool {
             InputSplit inputSplit = context.getInputSplit();
             String fileName = ((FileSplit) inputSplit).getPath().getName();
             String fileTag = Parser.getFileTag(fileName);
-            String[] rowArr =
-                Parser.parseing(fileTag, value.toString(), statType);
-            if (rowArr != null && rowArr.length == 2) {
-                word.set(rowArr[0]);
-                values.set(rowArr[1]);//IP_请求状态
-                context.write(word, values);//请求,1次
+            LogError logError=(LogError) JsonParser.jsonStrToObj(value.toString(),LogError.class);
+            if(logError!=null){
+                logError.setRowKey(StringUtil.append(fileTag,"_",logError.getErrorTimeDay()));
+                word.set(key.toString());
+                values.set(JsonParser.toString(logError));
+                context.write(word, values);//
             }
         }
     }
-
 
     public static class Reduce extends
         TableReducer<Text, Text, ImmutableBytesWritable> {
@@ -54,7 +59,12 @@ public class ErrorByDay extends Configured implements Tool {
         public void reduce(Text key, Iterable<Text> values,
                            Context context)
             throws IOException, InterruptedException {
-
+            for (Text val : values) {
+                LogError logError=(LogError)JsonParser.jsonStrToObj(val.toString(),LogError.class);
+                Put put =
+                        HbaseUtil.getPut(logError.getRowKey(), Constants.HBASE.LOG_EXCEPTION_CF, System.currentTimeMillis()+"", JsonParser.toString(logError));
+                context.write(new ImmutableBytesWritable(key.getBytes()), put);
+            }
         }
     }
 
@@ -76,7 +86,7 @@ public class ErrorByDay extends Configured implements Tool {
         job.setReducerClass(Reduce.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
-        job.setInputFormatClass(TextInputFormat.class);
+        job.setInputFormatClass(ErrorFileInputFormat.class);
         job.setOutputFormatClass(TableOutputFormat.class);
         FileInputFormat.addInputPath(job, in);
         return job.waitForCompletion(true) ? 0 : 1;

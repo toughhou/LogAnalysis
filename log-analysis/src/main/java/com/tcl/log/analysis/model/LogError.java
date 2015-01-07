@@ -11,25 +11,40 @@ import java.util.Date;
  * @date 1/7/15
  */
 public class LogError {
+    private String rowKey;
     private String level;
     private String errorTime;
     private String className;
     private String errorInfo;
-    private String errorTimeHour;
+
+    /**
+     * 是否ERROR信息
+     *
+     * @param value
+     * @return
+     */
+    public static boolean isError(String value) {
+        if (StringUtils.isEmpty(value) || !value.startsWith("[ERROR]")) {
+            return false;
+        }
+        return true;
+    }
 
 
-    private static LogError parseing(String value) {
-        if (StringUtils.isEmpty(value)||!value.startsWith("[ERROR]")) {
+    /**
+     * 解析异常对象
+     * @param value
+     * @return
+     */
+    public static LogError parseing(String value) {
+        if(!isError(value)){
             return null;
         }
         LogError error = new LogError();
-        String[] field=value.split(" ");
-        error.setErrorTime(StringUtil.append(field[1]," ",field[2]));
-        int index=value.indexOf(field[3])+field[3].length();
-        error.setErrorInfo(field);
-
-
-
+        String[] field = value.split(" ");
+        error.setErrorTime(StringUtil.append(field[1], " ", field[2]));
+        int index = value.indexOf(field[3]) + field[3].length();
+        error.setClassName(value.substring(index));
         return error;
     }
 
@@ -70,11 +85,15 @@ public class LogError {
         return DateUtil.fomartStrToDate("yyyy-MM-dd HH:mm:sss", this.errorTime);
     }
 
-    public String getErrorTimeHour() {
+    public String getErrorTimeDay() {
         return DateUtil.fomartDateToStr("yyyyMMdd", this.getTime_local_Date());
     }
 
-    public void setErrorTimeHour(String errorTimeHour) {
-        this.errorTimeHour = errorTimeHour;
+    public String getRowKey() {
+        return rowKey;
+    }
+
+    public void setRowKey(String rowKey) {
+        this.rowKey = rowKey;
     }
 }
