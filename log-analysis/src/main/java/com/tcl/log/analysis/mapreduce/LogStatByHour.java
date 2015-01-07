@@ -46,6 +46,7 @@ public class LogStatByHour extends Configured implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
+        LOG.info("LogStat Hour Job start.");
         Configuration conf = new Configuration();
         conf.set("hbase.zookeeper.quorum", "192.168.56.99,192.168.56.100,192.168.56.111");
         conf.set("hbase.zookeeper.property.clientPort", "4181");

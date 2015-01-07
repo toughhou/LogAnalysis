@@ -85,6 +85,7 @@ public class HbaseBaseDao {
     public Result getOneRecord(String tableName, String rowKey) throws IOException {
         HTable table = new HTable(cfg, tableName);
         Get get = new Get(rowKey.getBytes());
+//        get.setMaxVersions();
         Result rs = table.get(get);
         return rs;
     }

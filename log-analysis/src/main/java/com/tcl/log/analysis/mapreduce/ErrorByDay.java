@@ -1,44 +1,60 @@
 package com.tcl.log.analysis.mapreduce;
 
+import com.tcl.log.analysis.util.Parser;
 import com.tcl.log.common.constants.Constants;
-import com.tcl.log.common.util.StringUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableOutputFormat;
+import org.apache.hadoop.hbase.mapreduce.TableReducer;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 /**
  * @author kelong
- * @date 12/31/14
+ * @date 1/7/15
  */
-public class LogStatByDay extends Configured implements Tool {
-    public static Logger LOG = Logger.getLogger(LogStatByDay.class);
+public class ErrorByDay extends Configured implements Tool {
+    public static Logger LOG = Logger.getLogger(ErrorByDay.class);
 
-    public static class Map extends LogStatBaseMapper {
+    protected static Text word = new Text();
+    protected static Text values = new Text();
+
+    public static class Map extends Mapper<Object, Text, Text, Text> {
         //实现map函数
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            super.map(key, value, context, Constants.ANALYSIS.LOG_STAT_DAY);
+            InputSplit inputSplit = context.getInputSplit();
+            String fileName = ((FileSplit) inputSplit).getPath().getName();
+            String fileTag = Parser.getFileTag(fileName);
+            String[] rowArr =
+                Parser.parseing(fileTag, value.toString(), statType);
+            if (rowArr != null && rowArr.length == 2) {
+                word.set(rowArr[0]);
+                values.set(rowArr[1]);//IP_请求状态
+                context.write(word, values);//请求,1次
+            }
         }
     }
 
 
     public static class Reduce extends
-        LogStatBaseReduce {
+        TableReducer<Text, Text, ImmutableBytesWritable> {
         //实现reduce函数
         public void reduce(Text key, Iterable<Text> values,
                            Context context)
             throws IOException, InterruptedException {
-            super.reduce(key,values,context,Constants.ANALYSIS.LOG_STAT_DAY);
+
         }
     }
 
@@ -64,13 +80,5 @@ public class LogStatByDay extends Configured implements Tool {
         job.setOutputFormatClass(TableOutputFormat.class);
         FileInputFormat.addInputPath(job, in);
         return job.waitForCompletion(true) ? 0 : 1;
-    }
-
-    public static void main(String[] args) throws Exception {
-//        String currentDate = DateUtil.getBeforeDays(1, "yyyyMMdd");
-        String currentDate="20150103";
-        String inputDir = StringUtil.append(Constants.HADOOP.NGINX_INPUT_DIR, "/", currentDate);
-        String[] args1 = new String[] {inputDir};
-        ToolRunner.run(new Configuration(), new LogStatByDay(), args1);
     }
 }

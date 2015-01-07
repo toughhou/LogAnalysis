@@ -101,6 +101,8 @@
                         <label>项目:</label>
                         <select id="appName">
                             <option value="findmeback">findmeback</option>
+                            <option value="aota">aota</option>
+                            <option value="fstore">fstore</option>
                         </select>
                         <%--<div id="datetimepicker_hour" class="input-append">--%>
                         <%--<input data-format="yyyy-MM-dd HH:mm:ss" type="text" id="hour"/>--%>

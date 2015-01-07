@@ -44,14 +44,14 @@ public class HbaseBaseDaoTest {
 
     @Test
     public void getOneRecordTest() throws Exception {
-        Result result = hbaseBaseDao.getOneRecord("log", "findmeback_2015010407");
-        List<Cell> cells=result.getColumnCells("pv".getBytes(),"/phone/unregister".getBytes());
+        Result result = hbaseBaseDao.getOneRecord("log", "20150107");
+        List<Cell> cells=result.getColumnCells("exception".getBytes(),"exception1".getBytes());
         for(Cell cell:cells){
             System.out.println(new String(cell.getValue()));
         }
-        for (KeyValue kv : result.raw()) {
-            System.out.println(new String(kv.getKey()) + "=====>" + new String(kv.getValue()));
-        }
+//        for (KeyValue kv : result.raw()) {
+//            System.out.println(new String(kv.getKey()) + "=====>" + new String(kv.getValue()));
+//        }
     }
 
     @Test

@@ -32,7 +32,7 @@ public class LogStatBaseMapper extends Mapper<Object, Text, Text, Text> {
         String fileName = ((FileSplit) inputSplit).getPath().getName();
         String fileTag = Parser.getFileTag(fileName);
         String[] rowArr =
-            Parser.parseing(fileTag, value.toString(), Constants.ANALYSIS.LOG_STAT_DAY);
+            Parser.parseing(fileTag, value.toString(), statType);
         if (rowArr != null && rowArr.length == 2) {
             word.set(rowArr[0]);
             values.set(rowArr[1]);//IP_请求状态

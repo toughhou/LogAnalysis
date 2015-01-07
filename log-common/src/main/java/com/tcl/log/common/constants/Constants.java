@@ -11,7 +11,7 @@ public abstract class Constants {
     }
 
     public static class HBASE {
-        public static final String LOG_TABLE_HOUR = "log";
+        public static final String LOG_TABLE_HOUR = "log_hour";
         public static final String LOG_TABLE_DAY="log_day";
         public static final String LOG_PV_CF = "pv";
         public static final String LOG_EXCEPTION_CF = "exception";
