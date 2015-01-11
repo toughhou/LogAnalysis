@@ -22,4 +22,11 @@ public class CommonUtil {
         }
         return result;
     }
+
+    public static String objtoStr(Object obj) {
+        if (obj != null) {
+            return obj.toString();
+        }
+        return null;
+    }
 }

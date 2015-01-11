@@ -14,4 +14,19 @@ public class StringUtil {
         }
         return buf.toString();
     }
+
+    public static String[] splitRow(String row) {
+        String[] rows = row.split("_");
+        return rows;
+    }
+
+    public static String fillStr(int arg) {
+        String result = "";
+        if (arg < 10) {
+            result = "0" + result;
+        } else {
+            result = String.valueOf(arg);
+        }
+        return result;
+    }
 }

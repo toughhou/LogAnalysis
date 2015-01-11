@@ -92,8 +92,8 @@
     </div>
 </div>
 
-<div class="container">
-    <div class="row">
+<div class="container-fluid">
+    <div class="row-fluid">
         <div class="span12">
             <h2>Heading</h2>
             <div class="well">
@@ -104,8 +104,8 @@
                             <option value="aota">aota</option>
                             <option value="fstore">fstore</option>
                         </select>
-                        <%--<div id="datetimepicker_hour" class="input-append">--%>
-                        <%--<input data-format="yyyy-MM-dd HH:mm:ss" type="text" id="hour"/>--%>
+                        <%--<div id="datetimepicker_hour" class="parser-append">--%>
+                        <%--<parser data-format="yyyy-MM-dd HH:mm:ss" type="text" id="hour"/>--%>
                         <%--<span class="add-on">--%>
                         <%--<i data-time-icon="icon-time" data-date-icon="icon-calendar">--%>
                         <%--</i>--%>

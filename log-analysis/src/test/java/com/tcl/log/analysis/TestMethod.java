@@ -13,13 +13,14 @@ public class TestMethod {
     @Test
     public void test() {
 //        String s = "aaaaa?ddddd?dddd";
-        String s=null;
-        int[] a=new int[]{1,2};
-        try {
-//            int x = s.indexOf("?");
-            int y=a[5];
-        } catch (Exception e) {
-            LOG.error(e.getMessage(),e);
-        }
+//        String s=null;
+//        int[] a=new int[]{1,2};
+//        try {
+////            int x = s.indexOf("?");
+//            int y=a[5];
+//        } catch (Exception e) {
+//            LOG.error(e.getMessage(),e);
+//        }
+        System.out.print(Integer.parseInt("00"));
     }
 }
