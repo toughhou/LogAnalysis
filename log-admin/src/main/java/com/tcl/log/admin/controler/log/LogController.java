@@ -32,7 +32,7 @@ public class LogController extends BaseController {
      */
     @RequestMapping(value = "/log/dashborad")
     public String index() {
-        return "/log/log_dashborad2";
+        return "/log/log_dashborad3";
     }
 
     @RequestMapping(value = "/log/tables")

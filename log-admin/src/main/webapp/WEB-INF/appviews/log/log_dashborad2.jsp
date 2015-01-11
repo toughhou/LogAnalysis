@@ -26,6 +26,7 @@
     <script src="<%=contextPath%>/resource/assets/js/html5shiv.js"></script>
     <script src="<%=contextPath%>/resource/assets/js/respond.min.js"></script>
     <![endif]-->
+
 </head>
 
 <body>
@@ -420,19 +421,23 @@
 </script>
 <![endif]-->
 <script src="<%=contextPath%>/resource/assets/js/bootstrap.min.js"></script>
-<script src="<%=contextPath%>/resource/assets/js/typeahead-bs2.min.js"></script>
+<%--<script src="<%=contextPath%>/resource/assets/js/typeahead-bs2.min.js"></script>--%>
 <!-- page specific plugin scripts -->
 <!--[if lte IE 8]>
 <script src="<%=contextPath%>/resource/assets/js/excanvas.min.js"></script>
 <![endif]-->
 <!-- ace scripts -->
-<script src="<%=contextPath%>/resource/assets/js/ace-elements.min.js"></script>
+<%--<script src="<%=contextPath%>/resource/assets/js/ace-elements.min.js"></script>--%>
 <script src="<%=contextPath%>/resource/assets/js/ace.min.js"></script>
 <script src="<%=contextPath%>/resource/hcharts/highcharts.js"></script>
 <script src="<%=contextPath%>/resource/bootstrap/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript">
 
-    jQuery(function($) {
+    $(function(){
+        alert('xxxxxxxxx');
+    });
+
+    $(function(){
         var options={
             chart: {
                 renderTo: 'container'
